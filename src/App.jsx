@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowDownCircle, ArrowUpCircle, Wallet, Pencil, Trash2, TrendingUp, Landmark, X, PieChart } from 'lucide-react';
+import './App.css'; // ← Asegúrate de importar el CSS mejorado
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 const TRADES_URL = `${API_BASE}/api/trades`;
@@ -48,10 +49,10 @@ function App() {
     amountValue: '',
     date: new Date().toISOString().split('T')[0],
     method: 'Transferencia',
-    ticker: '' // 🟢 Propiedad para el ticker opcional en caja
+    ticker: ''
   });
 
-  // ===== BUSCAR ABREVIATURA Y AUTOCOMPLETADO DE NOMBRE DE ACCION ==========
+  // ===== BUSCAR ABREVIATURA Y AUTOCOMPLETADO ==========
   const uniqueAssets = trades.reduce((acc, current) => {
     const exists = acc.find(item => item.ticker.toUpperCase() === current.ticker.toUpperCase());
     if (!exists && current.ticker) {
@@ -85,7 +86,7 @@ function App() {
     return matchesSearch && matchesType;
   });
 
-  // 🟢 FILTRADO: Movimientos de Caja (Ahora busca también por Ticker)
+  // 🟢 FILTRADO: Movimientos de Caja
   const filteredCashflowsList = cashflows.filter(cash => {
     const methodMatch = cash.method ? cash.method.toLowerCase().includes(cashSearch.toLowerCase()) : false;
     const tickerMatch = cash.ticker ? cash.ticker.toLowerCase().includes(cashSearch.toLowerCase()) : false;
@@ -143,7 +144,7 @@ function App() {
   };
 
   // ==========================================
-  // 📊 FUNCIONES PARA TRADES (OPERACIONES)
+  // 📊 FUNCIONES PARA TRADES
   // ==========================================
   const fetchTrades = async () => {
     try {
@@ -195,7 +196,7 @@ function App() {
   };
 
   // ==========================================
-  // 💰 FUNCIONES PARA CASHFLOW (CAJA)
+  // 💰 FUNCIONES PARA CASHFLOW
   // ==========================================
   const fetchCashflows = async () => {
     try {
@@ -235,7 +236,7 @@ function App() {
       amountValue: cash.amountValue,
       date: new Date(cash.date).toISOString().split('T')[0],
       method: cash.method || 'Transferencia',
-      ticker: cash.ticker || '' // Carga el ticker si existe al editar
+      ticker: cash.ticker || ''
     });
   };
 
@@ -246,12 +247,11 @@ function App() {
       amountValue: '', 
       date: new Date().toISOString().split('T')[0], 
       method: 'Transferencia',
-      ticker: '' // Resetea el ticker
+      ticker: ''
     });
   };
 
-  // ===== NUEVO 19/06/2026 2:20PM ====
-  // 📊 CALCULAR RENDIMIENTO POR ACTIVO (P&L)
+  // ===== RENDIMIENTO POR ACTIVO =====
   const performanceByAsset = trades.reduce((acc, trade) => {
     const ticker = trade.ticker.toUpperCase();
     if (!acc[ticker]) {
@@ -267,14 +267,12 @@ function App() {
     return acc;
   }, {});
 
-  // Sumar los dividendos que correspondan a cada ticker
   cashflows.forEach(cash => {
     if (cash.type === 'DIVIDENDO' && cash.ticker) {
       const ticker = cash.ticker.toUpperCase();
       if (performanceByAsset[ticker]) {
         performanceByAsset[ticker].dividendos += Number(cash.amountValue);
       } else {
-        // Por si cobraste dividendos de una acción que ya no está en tu lista de trades
         performanceByAsset[ticker] = { 
           ticker, 
           assetName: 'Activo de Caja', 
@@ -286,7 +284,6 @@ function App() {
     }
   });
 
-  // Convertir el objeto a una lista para renderizarla fácilmente en una tabla
   const performanceList = Object.values(performanceByAsset);
 
   return (
@@ -305,19 +302,19 @@ function App() {
             className={`tab-button ${activeTab === 'trades' ? 'active' : ''}`}
             onClick={() => setActiveTab('trades')}
           >
-            <TrendingUp size={18} /> Operaciones (Trading)
+            <TrendingUp size={18} /> <span className="tab-label">Operaciones</span>
           </button>
           <button 
             className={`tab-button ${activeTab === 'cashflow' ? 'active' : ''}`}
             onClick={() => setActiveTab('cashflow')}
           >
-            <Landmark size={18} /> Flujo de Caja (Efectivo)
+            <Landmark size={18} /> <span className="tab-label">Flujo de Caja</span>
           </button>
           <button 
             className={`tab-button ${activeTab === 'performance' ? 'active' : ''}`}
             onClick={() => setActiveTab('performance')}
           >
-            <PieChart size={18} /> Rendimiento (P&L)
+            <PieChart size={18} /> <span className="tab-label">Rendimiento</span>
           </button>
         </nav>
 
@@ -373,7 +370,7 @@ function App() {
                   <input type="text" required placeholder="Ej: Apple, Bitcoin" value={tradeForm.assetName} onChange={(e) => setTradeForm({...tradeForm, assetName: e.target.value})} className="form-control" />
                 </div>
                 <div className="form-group">
-                  <label>URL del Logo / Imagen (Opcional)</label>
+                  <label>URL del Logo (Opcional)</label>
                   <input type="url" placeholder="Ej: https://cryptologos.cc/logos/bitcoin-btc-logo.png" value={tradeForm.imageUrl} onChange={(e) => setTradeForm({...tradeForm, imageUrl: e.target.value})} className="form-control" />
                 </div>
                 <div className="form-group">
@@ -486,13 +483,12 @@ function App() {
                   </select>
                 </div>
 
-                {/* Input condicional para el Ticker de los dividendos */}
                 {cashForm.type === 'DIVIDENDO' && (
                   <div className="form-group">
                     <label>Ticker / Acción <span style={{ opacity: 0.5, fontSize: '0.85rem' }}>(Opcional)</span></label>
                     <input 
                       type="text" 
-                      placeholder="Ej: AAPL, O (Vacío si es viejo/desconocido)" 
+                      placeholder="Ej: AAPL, O" 
                       value={cashForm.ticker} 
                       onChange={(e) => setCashForm({...cashForm, ticker: e.target.value})} 
                       className="form-control uppercase"
@@ -506,7 +502,7 @@ function App() {
                 </div>
                 <div className="form-group">
                   <label>Detalle / Plataforma</label>
-                  <input type="text" placeholder="Ej: Transferencia, Tarjeta, Binance, Hapi" value={cashForm.method} onChange={(e) => setCashForm({...cashForm, method: e.target.value})} className="form-control" />
+                  <input type="text" placeholder="Ej: Transferencia, Tarjeta, Binance" value={cashForm.method} onChange={(e) => setCashForm({...cashForm, method: e.target.value})} className="form-control" />
                 </div>
                 <div className="form-group">
                   <label>Fecha</label>
@@ -557,10 +553,9 @@ function App() {
                     </thead>
                     <tbody>
                       {filteredCashflowsList.map((c) => {
-                        // 🟢 LÓGICA DINÁMICA DE CLASES Y COLORES
-                        let typeClass = 'compra'; // Depósito (verde) por defecto
-                        if (c.type === 'RETIRO') typeClass = 'venta'; // Retiro (rojo)
-                        if (c.type === 'DIVIDENDO') typeClass = 'dividendo'; // Dividendo (ámbar)
+                        let typeClass = 'compra';
+                        if (c.type === 'RETIRO') typeClass = 'venta';
+                        if (c.type === 'DIVIDENDO') typeClass = 'dividendo';
 
                         let valueColor = 'var(--success)';
                         if (c.type === 'RETIRO') valueColor = 'var(--danger)';
@@ -630,7 +625,6 @@ function App() {
                   </thead>
                   <tbody>
                     {performanceList.map((asset) => {
-                      // 🧮 Fórmula: Ventas + Dividendos - Compras
                       const totalGainLoss = (asset.ventas + asset.dividendos) - asset.compras;
                       const isProfit = totalGainLoss >= 0;
 
