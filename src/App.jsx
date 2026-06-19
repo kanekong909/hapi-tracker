@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { ArrowDownCircle, ArrowUpCircle, Wallet, Pencil, Trash2, TrendingUp, Landmark, X, PieChart } from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-const TRADES_URL = `${API_BASE}/trades`;
-const CASHFLOW_URL = `${API_BASE}/cashflow`;
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const TRADES_URL = `${API_BASE}/api/trades`;
+const CASHFLOW_URL = `${API_BASE}/api/cashflow`;
 
 // Función para formatear fechas ignorando la zona horaria
 const formatDate = (dateString) => {
