@@ -1,0 +1,681 @@
+/* Variables con paleta Cyberpunk / Trading Premium */
+:root {
+  --bg-main: #0b0f19;         /* Fondo ultra oscuro profundamente estético */
+  --bg-card: #141b2d;         /* Tarjetas oscuras para dar profundidad */
+  --bg-input: #1f293d;        /* Inputs integrados en el diseño */
+  
+  --primary: #3b82f6;         /* Azul eléctrico */
+  --primary-glow: rgba(59, 130, 246, 0.3);
+  
+  --success: #10b981;         /* Verde esmeralda brillante (COMPRA) */
+  --success-bg: rgba(16, 185, 129, 0.1);
+  
+  --danger: #f43f5e;          /* Rosa/Rojo neón (VENTA) */
+  --danger-bg: rgba(244, 63, 94, 0.1);
+  
+  --amber: #f59e0b;           /* Ámbar para edición */
+  --amber-bg: rgba(245, 158, 11, 0.15);
+  --text-main: #f3f4f6;       /* Texto casi blanco, alta legibilidad */
+  --text-muted: #9ca3af;      /* Texto secundario grisáceo */
+  
+  --border-color: #24324d;
+  --radius: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* El badge del tipo de flujo en la tabla */
+.cell-type.dividendo {
+  background-color: var(--amber-bg);
+  color: var(--amber);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Color para el icono de Lucide */
+.icon-amber {
+  color: var(--amber);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  padding: 30px 15px;
+  letter-spacing: -0.01em;
+}
+
+/* Contenedor Principal */
+.app-viewport {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Header Estilo Cristal */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background-color: var(--bg-card);
+  padding: 20px 28px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.app-header h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #3b82f6, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.icon-blue { color: var(--primary); filter: drop-shadow(0 0 8px var(--primary)); }
+
+/* Layout Grid */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+@media (min-width: 768px) {
+  .main-grid {
+    grid-template-columns: 1fr 1.8fr;
+  }
+}
+
+/* Tarjetas Estilizadas */
+.card {
+  background-color: var(--bg-card);
+  padding: 28px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  height: fit-content;
+  transition: var(--transition);
+  overflow: visible !important;
+}
+
+.card.editing-mode {
+  border-color: var(--amber);
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+}
+
+.card h2 {
+  font-size: 1.25rem;
+  color: var(--text-main);
+  margin-bottom: 24px;
+  font-weight: 700;
+  border-left: 4px solid var(--primary);
+  padding-left: 10px;
+}
+
+.card.editing-mode h2 {
+  border-left-color: var(--amber);
+}
+
+/* Formulario Moderno */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  outline: none;
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-glow);
+  background-color: #242f46;
+}
+
+.uppercase { text-transform: uppercase; }
+
+/* Select personalizado para dark mode */
+select.form-control {
+  cursor: pointer;
+}
+
+/* Botones */
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), #1d4ed8);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+}
+
+.btn-amber {
+  background: linear-gradient(135deg, var(--amber), #b45309);
+  color: white;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+.btn-amber:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+}
+
+.btn-cancel {
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+.btn-cancel:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+}
+
+/* Tabla de Posiciones / Historial */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.trade-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.trade-table th {
+  padding: 14px 12px;
+  border-bottom: 2px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.trade-table td {
+  padding: 16px 12px;
+  border-bottom: 1px solid rgba(36, 50, 77, 0.5);
+  vertical-align: middle;
+}
+
+.trade-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Detalles de las filas */
+.cell-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.cell-type.compra {
+  background-color: var(--success-bg);
+  color: var(--success);
+}
+
+.cell-type.venta {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+}
+
+.icon-success { filter: drop-shadow(0 0 4px var(--success)); }
+.icon-danger { filter: drop-shadow(0 0 4px var(--danger)); }
+
+.asset-ticker {
+  font-weight: 800;
+  color: var(--text-main);
+  font-size: 1.05rem;
+}
+.asset-name {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.cell-value {
+  font-weight: 700;
+  color: var(--text-main);
+  font-family: monospace;
+  font-size: 1.05rem;
+}
+
+.cell-date {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Botones de control flotantes */
+.actions-cell {
+  text-align: center;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+}
+
+.edit-btn { color: var(--text-muted); }
+.edit-btn:hover { 
+  color: var(--amber); 
+  background-color: rgba(245, 158, 11, 0.1); 
+}
+
+.delete-btn { color: var(--text-muted); }
+.delete-btn:hover { 
+  color: var(--danger); 
+  background-color: var(--danger-bg); 
+}
+
+.empty-state {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 40px 0;
+  font-style: italic;
+}
+
+/* --- ESTILOS DE PESTAÑAS (TABS) --- */
+.tabs-container {
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 2px;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 10px 10px 0 0;
+  transition: var(--transition);
+  border-bottom: 3px solid transparent;
+}
+
+.tab-button:hover {
+  color: var(--text-main);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.tab-button.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+/* --- SYSTEM TOAST NOTIFICATIONS --- */
+.custom-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  background-color: rgba(20, 27, 45, 0.85); /* Fondo de tarjeta traslúcido */
+  backdrop-filter: blur(10px);
+  color: var(--text-main);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--border-color);
+  z-index: 9999;
+  animation: slideInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toast-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Variación Éxito (Guardar / Editar) */
+.toast-success {
+  border-left: 4px solid var(--success);
+}
+.toast-success .toast-bullet {
+  background-color: var(--success);
+  box-shadow: 0 0 8px var(--success);
+}
+
+/* Variación Peligro (Eliminar) */
+.toast-danger {
+  border-left: 4px solid var(--danger);
+}
+.toast-danger .toast-bullet {
+  background-color: var(--danger);
+  box-shadow: 0 0 8px var(--danger);
+}
+
+/* Animación de entrada fluida */
+@keyframes slideInUp {
+  from {
+    transform: translateY(40px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* --- CUSTOM CONFIRMATION MODAL --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(7, 10, 19, 0.7); /* Fondo traslúcido muy oscuro */
+  backdrop-filter: blur(6px); /* Difumina lo que está detrás */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.custom-modal {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 28px;
+  border-radius: 16px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+  animation: modalScaleIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.custom-modal h2 {
+  font-size: 1.35rem;
+  margin-bottom: 12px;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.custom-modal p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 26px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-modal-danger {
+  background-color: var(--danger);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-modal-danger:hover {
+  background-color: #e11d48;
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.45);
+}
+
+/* Animación de escala de rebote suave */
+@keyframes modalScaleIn {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* --- ASSET LOGO STYLES --- */
+.asset-cell-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.asset-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2px;
+}
+
+/* Diseñado por si no hay URL, genera un badge neón con degradado rápido */
+.asset-logo-placeholder {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0072ff, #00f2fe);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 10px rgba(0, 114, 255, 0.3);
+}
+
+/* --- SUGGESTIONS DROPDOWN --- */
+.suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 999;
+  list-style: none;
+  padding: 6px;
+  margin: 0;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+}
+
+.suggestions-dropdown li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.suggestions-dropdown li:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.suggestion-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.suggestion-logo-placeholder {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0072ff, #00f2fe);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.65rem;
+}
+
+.suggestion-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.suggestion-ticker {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.suggestion-name {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Personalizar barra de scroll del buscador */
+.suggestions-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+.suggestions-dropdown::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+
+/* --- BARRA DE FILTROS DASHBOARD --- */
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  background-color: rgba(255, 255, 255, 0.02);
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.filter-input {
+  flex: 2; /* El buscador toma más espacio */
+  margin-bottom: 0 !important; /* Resetea márgenes del formulario normal */
+}
+
+.filter-select {
+  flex: 1; /* El desplegable es más compacto */
+  margin-bottom: 0 !important;
+  cursor: pointer;
+}
+
+/* Ajuste responsivo para celulares */
+@media (max-width: 576px) {
+  .filter-bar {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* --- CONTENEDOR DEL BUSCADOR --- */
+.search-wrapper {
+  position: relative;
+  flex: 2; /* Mantiene la proporción del buscador en la barra */
+  display: flex;
+  align-items: center;
+}
+
+.search-wrapper .filter-input {
+  width: 100%;
+  padding-right: 40px; /* Deja espacio a la derecha para que el texto no tape la X */
+}
+
+/* --- BOTÓN DE BORRAR (X) --- */
+.clear-search-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.clear-search-btn:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
