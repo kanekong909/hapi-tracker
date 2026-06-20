@@ -81,12 +81,12 @@ function App() {
   };
 
   const isDateInRange = (itemDate) => {
-    if (!dateFilter.start && !dateFilter.end) return true;
-    const d = new Date(itemDate).setHours(0, 0, 0, 0);
-    const start = dateFilter.start ? new Date(dateFilter.start).setHours(0, 0, 0, 0) : -Infinity;
-    const end = dateFilter.end ? new Date(dateFilter.end).setHours(0, 0, 0, 0) : Infinity;
-    return d >= start && d <= end;
-  };
+      if (!dateFilter.start && !dateFilter.end) return true;
+      const d = new Date(itemDate).setHours(0, 0, 0, 0);
+      const start = dateFilter.start ? new Date(dateFilter.start).setHours(0, 0, 0, 0) : -Infinity;
+      const end = dateFilter.end ? new Date(dateFilter.end).setHours(0, 0, 0, 0) : Infinity;
+      return d >= start && d <= end;
+    };
 
   // 🟢 FILTRADO: Operaciones de Trading
   const filteredTradesList = trades.filter(trade => {
@@ -94,14 +94,6 @@ function App() {
                           trade.assetName.toLowerCase().includes(tradeSearch.toLowerCase());
     const matchesType = tradeTypeFilter === 'TODOS' || trade.type === tradeTypeFilter;
     return matchesSearch && matchesType && isDateInRange(trade.tradeDate);
-  });
-
-  const filteredTrades = trades.filter(t => {
-    const tradeDate = new Date(t.date).setHours(0,0,0,0);
-    const start = startDate ? new Date(startDate).setHours(0,0,0,0) : new Date(0);
-    const end = endDate ? new Date(endDate).setHours(0,0,0,0) : new Date();
-    
-    return tradeDate >= start && tradeDate <= end;
   });
 
   // 🟢 FILTRADO: Movimientos de Caja
