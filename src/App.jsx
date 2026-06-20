@@ -305,6 +305,10 @@ function App() {
 
   const performanceList = Object.values(performanceByAsset);
 
+  const totalPL = performanceList.reduce((sum, asset) => {
+    return sum + ((asset.ventas + asset.dividendos) - asset.compras);
+  }, 0);
+
   return (
     <div className="app-viewport">
       <div className="app-container">
@@ -626,6 +630,23 @@ function App() {
             </section>
           </div>
         )}
+
+        {/* RESUMEN DE P&L TOTAL */}
+        <div className="performance-summary" style={{ 
+          marginBottom: '20px', 
+          padding: '15px', 
+          borderRadius: '8px', 
+          background: totalPL >= 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+          border: `1px solid ${totalPL >= 0 ? 'var(--success)' : 'var(--danger)'}`,
+          textAlign: 'center'
+        }}>
+          <h3 style={{ margin: '0 0 5px 0', color: totalPL >= 0 ? 'var(--success)' : 'var(--danger)' }}>
+            Resultado Neto Total (P&L): {totalPL >= 0 ? '+' : ''}${totalPL.toFixed(2)}
+          </h3>
+          <p style={{ margin: 0, fontSize: '0.9rem', color: '#6b7280' }}>
+            Considerando: Ventas + Dividendos - Compras
+          </p>
+        </div>
 
         {/* PESTAÑA RENDIMIENTO */}
         {activeTab === 'performance' && (
