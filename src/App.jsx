@@ -33,6 +33,7 @@ function App() {
   const [tradeTypeFilter, setTradeTypeFilter] = useState('TODOS');
   const [cashSearch, setCashSearch] = useState('');
   const [cashTypeFilter, setCashTypeFilter] = useState('TODOS');
+  const [dateFilter, setDateFilter] = useState({ start: '', end: '' });
 
   // Tasa de conversión
   const [usdToCop, setUsdToCop] = useState(4100);
@@ -79,24 +80,35 @@ function App() {
     setShowSuggestions(false);
   };
 
+  const isDateInRange = (itemDate) => {
+    if (!dateFilter.start && !dateFilter.end) return true;
+    const d = new Date(itemDate).setHours(0, 0, 0, 0);
+    const start = dateFilter.start ? new Date(dateFilter.start).setHours(0, 0, 0, 0) : -Infinity;
+    const end = dateFilter.end ? new Date(dateFilter.end).setHours(0, 0, 0, 0) : Infinity;
+    return d >= start && d <= end;
+  };
+
   // 🟢 FILTRADO: Operaciones de Trading
   const filteredTradesList = trades.filter(trade => {
-    const matchesSearch = 
-      trade.ticker.toLowerCase().includes(tradeSearch.toLowerCase()) ||
-      trade.assetName.toLowerCase().includes(tradeSearch.toLowerCase());
-    
+    const matchesSearch = trade.ticker.toLowerCase().includes(tradeSearch.toLowerCase()) || 
+                          trade.assetName.toLowerCase().includes(tradeSearch.toLowerCase());
     const matchesType = tradeTypeFilter === 'TODOS' || trade.type === tradeTypeFilter;
-    return matchesSearch && matchesType;
+    return matchesSearch && matchesType && isDateInRange(trade.tradeDate);
+  });
+
+  const filteredTrades = trades.filter(t => {
+    const tradeDate = new Date(t.date).setHours(0,0,0,0);
+    const start = startDate ? new Date(startDate).setHours(0,0,0,0) : new Date(0);
+    const end = endDate ? new Date(endDate).setHours(0,0,0,0) : new Date();
+    
+    return tradeDate >= start && tradeDate <= end;
   });
 
   // 🟢 FILTRADO: Movimientos de Caja
   const filteredCashflowsList = cashflows.filter(cash => {
-    const methodMatch = cash.method ? cash.method.toLowerCase().includes(cashSearch.toLowerCase()) : false;
-    const tickerMatch = cash.ticker ? cash.ticker.toLowerCase().includes(cashSearch.toLowerCase()) : false;
-    const matchesSearch = cashSearch === '' || methodMatch || tickerMatch;
-    
+    const matchesSearch = cashSearch === '' || (cash.method?.toLowerCase().includes(cashSearch.toLowerCase())) || (cash.ticker?.toLowerCase().includes(cashSearch.toLowerCase()));
     const matchesType = cashTypeFilter === 'TODOS' || cash.type === cashTypeFilter;
-    return matchesSearch && matchesType;
+    return matchesSearch && matchesType && isDateInRange(cash.date);
   });
 
   // Carga inicial de datos
@@ -427,6 +439,30 @@ function App() {
                   )}
                 </div>
 
+                {/* NUEVO: Bloque de filtros de fecha */}
+                <div className="date-filter-group" style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                  <input 
+                    type="date" 
+                    className="form-control"
+                    style={{ width: '130px' }}
+                    value={dateFilter.start}
+                    onChange={(e) => setDateFilter({...dateFilter, start: e.target.value})}
+                  />
+                  <span>-</span>
+                  <input 
+                    type="date" 
+                    className="form-control"
+                    style={{ width: '130px' }}
+                    value={dateFilter.end}
+                    onChange={(e) => setDateFilter({...dateFilter, end: e.target.value})}
+                  />
+                  {(dateFilter.start || dateFilter.end) && (
+                    <button className="clear-search-btn" onClick={() => setDateFilter({start: '', end: ''})}>
+                      <X size={16} />
+                    </button>
+                  )}
+                </div>
+
                 <select value={tradeTypeFilter} onChange={(e) => setTradeTypeFilter(e.target.value)} className="form-control filter-select">
                   <option value="TODOS">Todos los tipos</option>
                   <option value="COMPRA">Compras</option>
@@ -558,6 +594,30 @@ function App() {
                     </button>
                   )}
                 </div>
+
+                {/* NUEVO: Bloque de filtros de fecha */}
+                <div className="date-filter-group" style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                  <input 
+                    type="date" 
+                    className="form-control"
+                    style={{ width: '130px' }}
+                    value={dateFilter.start}
+                    onChange={(e) => setDateFilter({...dateFilter, start: e.target.value})}
+                  />
+                  <span>-</span>
+                  <input 
+                    type="date" 
+                    className="form-control"
+                    style={{ width: '130px' }}
+                    value={dateFilter.end}
+                    onChange={(e) => setDateFilter({...dateFilter, end: e.target.value})}
+                  />
+                  {(dateFilter.start || dateFilter.end) && (
+                    <button className="clear-search-btn" onClick={() => setDateFilter({start: '', end: ''})}>
+                      <X size={16} />
+                    </button>
+                  )}
+                  </div>
 
                 <select value={cashTypeFilter} onChange={(e) => setCashTypeFilter(e.target.value)} className="form-control filter-select">
                   <option value="TODOS">Todos los flujos</option>
