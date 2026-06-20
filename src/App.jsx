@@ -34,6 +34,9 @@ function App() {
   const [cashSearch, setCashSearch] = useState('');
   const [cashTypeFilter, setCashTypeFilter] = useState('TODOS');
 
+  // Tasa de conversión
+  const [usdToCop, setUsdToCop] = useState(4100);
+
   // Formularios
   const [tradeForm, setTradeForm] = useState({
     type: 'COMPRA',
@@ -100,6 +103,22 @@ function App() {
   useEffect(() => {
     fetchTrades();
     fetchCashflows();
+  }, []);
+
+  // UseEffect de Tasa de conversión
+  useEffect(() => {
+    const fetchRate = async () => {
+      try {
+        const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+        const data = await response.json();
+        if (data.rates && data.rates.COP) {
+          setUsdToCop(data.rates.COP);
+        }
+      } catch (error) {
+        console.error("Error obteniendo tasa de cambio:", error);
+      }
+    };
+    fetchRate();
   }, []);
 
   // ==========================================
@@ -447,7 +466,12 @@ function App() {
                               </div>
                             </div>
                           </td>
-                          <td className="cell-value">${Number(t.amountValue).toFixed(2)}</td>
+                          <td className="cell-value">
+                            <div>${Number(t.amountValue).toFixed(2)}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                              COP ${(Number(t.amountValue) * usdToCop).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
+                            </div>
+                          </td>
                           <td className="cell-date">{formatDate(t.tradeDate)}</td>
                           <td className="actions-cell">
                             <button onClick={() => startTradeEdit(t)} className="action-btn edit-btn"><Pencil size={16} /></button>
