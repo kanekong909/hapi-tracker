@@ -67,6 +67,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .app-container {
